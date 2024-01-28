@@ -1,8 +1,11 @@
 
-from flask import Flask, render_template, request
+
+from flask import Flask, render_template, request, session
 from datetime import datetime, timedelta
+import uuid  # Import uuid for generating unique user IDs
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
 # Dictionary to store text data with access links and timestamps
 text_data = {}
@@ -10,6 +13,10 @@ text_data = {}
 # Function to generate a unique access link
 def generate_access_link():
     return str(datetime.now().timestamp())
+
+# Function to generate a unique user ID
+def generate_user_id():
+    return str(uuid.uuid4())
 
 # Function to check if the access link is valid and within the time limit
 def is_valid_link(link):
@@ -25,14 +32,21 @@ def is_valid_link(link):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global text_data
-    access_link = None
 
     try:
+        access_link = None
+        user_id = session.get('user_id')
+
+        if not user_id:
+            # If user doesn't have an ID, generate one
+            user_id = generate_user_id()
+            session['user_id'] = user_id
+
         if request.method == 'POST':
             text = request.form['text']
 
             # If there's an existing link and it's still valid, use it
-            existing_link = next((link for link, data in text_data.items() if is_valid_link(link)), None)
+            existing_link = next((link for link, data in text_data.items() if data['user_id'] == user_id and is_valid_link(link)), None)
             if existing_link:
                 access_link = existing_link
             else:
@@ -41,7 +55,7 @@ def index():
 
             # Store the text data with access link, timestamp, and texts
             if access_link not in text_data:
-                text_data[access_link] = {'timestamp': datetime.now(), 'texts': []}
+                text_data[access_link] = {'user_id': user_id, 'timestamp': datetime.now(), 'texts': []}
 
             # Append the new text to the list of texts
             text_data[access_link]['texts'].append({'text': text, 'timestamp': datetime.now()})
@@ -55,7 +69,7 @@ def access_text(access_link):
     global text_data
 
     try:
-        if is_valid_link(access_link):
+        if is_valid_link(access_link) and text_data[access_link]['user_id'] == session.get('user_id'):
             if request.method == 'POST':
                 # Update the list of texts for live pasting
                 text = request.form['text']

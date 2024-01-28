@@ -14,7 +14,7 @@ app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = True
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_KEY_PREFIX'] = 'your_prefix_here'  # Optional: Add a key prefix
-app.config['SESSION_REDIS'] = redis.StrictRedis.from_url('redis://localhost:6379')
+app.config['SESSION_REDIS'] = redis.StrictRedis.from_url('redis://led-c6na6rjru51t7lilgs3g:6379')
 
 
 Session(app)

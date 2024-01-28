@@ -2,16 +2,20 @@ from flask import Flask, render_template, request, session
 from flask_session import Session
 from datetime import datetime, timedelta
 import uuid
+import redis
 
 app = Flask(__name__)
 
 # Set the Flask app secret key
 app.secret_key = '121121121'  # Replace with a secure key
 
-# Configure Flask-Session to use server-side session storage
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_PERMANENT'] = False
+# Configure session storage for server-side persistence using Redis
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_PERMANENT'] = True
 app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_KEY_PREFIX'] = 'your_prefix_here'  # Optional: Add a key prefix
+app.config['SESSION_REDIS'] = redis.StrictRedis.from_url('redis://localhost:6379/0')  # Adjust Redis URL if needed
+
 Session(app)
 
 def generate_user_id():

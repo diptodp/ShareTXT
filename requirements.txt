@@ -2,5 +2,5 @@ Flask==3.0.1
 Flask-SQLAlchemy>=3.1.1
 Gunicorn
 shortuuid==1.0.11
-
+Flask-Session==0.6.0
 # Add other dependencies as needed

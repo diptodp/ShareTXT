@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Sharing App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%; /* Adjust the width as needed */
+            max-width: 600px;
+            position: relative;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin-top: 10px;
+        }
+
+        p a {
+            color: #007bff; /* Set the link color to blue */
+            text-decoration: none; /* Remove underline */
+            word-break: break-all; /* Break the link if it's too long */
+            display: inline-block; /* Ensure the link doesn't go outside the container */
+            width: 100%; /* Make the link take full width */
+        }
+
+        p a:hover {
+            text-decoration: underline; /* Add underline on hover */
+        }
+
+        button.copy-button {
+            margin-top: 8px;
+            background-color: #007bff;
+            color: white;
+            padding: 8px 12px; /* Adjust padding for size */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 0; /* Remove margin on small screens */
+            width: 100%; /* Make the copy button full width on small screens */
+        }
+
+        button.copy-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Media queries for responsive design */
+        @media only screen and (max-width: 600px) {
+            form {
+                width: 70%; /* Adjust the width for smaller screens */
+            }
+        }
+
+        @media only screen and (max-width: 400px) {
+            form {
+                width: 75%; /* Adjust the width for even smaller screens */
+            }
+
+            button.copy-button {
+                width: 100%; /* Make the copy button full width on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="/">
+        <h1>Text Sharing App</h1>
+
+        <label for="text">Paste Text:</label>
+        <textarea name="text" rows="4" cols="50" required></textarea>
+        <br>
+        <button type="submit">Paste</button>
+
+        {% if access_link %}
+            <p>
+                Access Link: 
+                <a id="access-link" href="{{ url_for('access_text', access_link=access_link, _external=True) }}" target="_blank">{{ url_for('access_text', access_link=access_link, _external=True) }}</a>
+                <button class="copy-button" onclick="copyToClipboard()">Copy</button>
+            </p>
+        {% endif %}
+
+        <script>
+            function copyToClipboard() {
+                var linkText = document.getElementById("access-link").textContent;
+
+                var tempInput = document.createElement("textarea");
+                tempInput.value = linkText;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+
+                alert("Link copied to clipboard: " + linkText);
+            }
+        </script>
+    </form>
+</body>
+</html>

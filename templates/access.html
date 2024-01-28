@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Text</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        div {
+            width: 90%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .time-box {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            margin-bottom: 5px;
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            background-color: rgb(195, 195, 199);
+        }
+
+        p {
+            margin: 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+            flex-grow: 1;
+            word-wrap: break-word; 
+            text-align: justify;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #ddd;
+            margin: 10px 0;
+        }
+
+        .copy-button {
+            cursor: pointer;
+            background-color: #3a80f9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-top: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .copy-button:hover {
+            background-color: #295bbf;
+        }
+
+        /* Responsive adjustments */
+        @media only screen and (max-width: 600px) {
+            div {
+                width: 100%;
+            }
+        }
+
+        @media only screen and (min-width: 601px) and (max-width: 900px) {
+            div {
+                width: 80%;
+            }
+        }
+
+        @media only screen and (min-width: 901px) and (max-width: 1200px) {
+            div {
+                width: 70%;
+            }
+        }
+
+        @media only screen and (min-width: 1201px) and (max-width: 1900px) {
+            div {
+                width: 60%;
+            }
+        }
+
+        @media only screen and (min-width: 1901px) {
+            div {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Access Text</h1>
+
+    {% for item in texts %}
+        <div>
+            <div class="time-box">
+                {{ item['timestamp'].strftime('%I:%M %p') }}
+            </div>
+            <p>{{ item['text'] }}</p>
+            <button class="copy-button" onclick="copyToClipboard(this.previousElementSibling.innerHTML)">Copy</button>
+            <hr>
+        </div>
+    {% endfor %}
+
+    <script>
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('Text copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
